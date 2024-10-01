@@ -33,7 +33,7 @@ const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.createUrl = createUrl;
 const getAllUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const shortUrls = yield shortUrl_1.urlModel.find();
+        const shortUrls = yield shortUrl_1.urlModel.find().sort({ createdAt: -1 });
         if (shortUrls.length < 0) {
             res.status(404).send({ message: "Short Urls not found!" });
         }
@@ -52,13 +52,13 @@ const getUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             shortUrl: req.params.id
         });
         if (!shortUrl) {
-            res.status(404).send({ message: "Full Url not found!" });
+            res.status(404).send({ message: "Full URL not found!" });
         }
         else {
             shortUrl.clicks++;
-            shortUrl.save();
-            res.redirect(`${shortUrl.fullUrl}`);
-            res.status(200).send(shortUrl);
+            yield shortUrl.save(); // Ensure save is awaited
+            // Redirecting to the full URL and ending the response
+            res.redirect(shortUrl.fullUrl);
         }
     }
     catch (error) {
