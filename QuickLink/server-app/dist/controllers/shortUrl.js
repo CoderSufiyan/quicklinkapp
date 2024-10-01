@@ -14,7 +14,6 @@ const shortUrl_1 = require("../model/shortUrl");
 const createUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { fullUrl } = req.body;
-        console.log("The full url is ", fullUrl);
         const urlFound = yield shortUrl_1.urlModel.find({
             fullUrl
         });

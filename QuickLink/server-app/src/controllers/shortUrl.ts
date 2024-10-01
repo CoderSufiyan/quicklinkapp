@@ -4,7 +4,6 @@ import { urlModel } from '../model/shortUrl'
 export const createUrl = async (req: express.Request, res: express.Response) => {
     try {
         const { fullUrl } = req.body;
-        console.log("The full url is ", fullUrl);
         const urlFound = await urlModel.find({
             fullUrl
         })
@@ -22,7 +21,7 @@ export const createUrl = async (req: express.Request, res: express.Response) => 
 
 export const getAllUrl = async (req: express.Request, res: express.Response) => {
     try {
-        const shortUrls = await urlModel.find();
+        const shortUrls = await urlModel.find().sort({ createdAt: -1 });
         if(shortUrls.length < 0) {
             res.status(404).send({message: "Short Urls not found!"})
         } else {
@@ -38,18 +37,21 @@ export const getUrl = async (req: express.Request, res: express.Response) => {
         const shortUrl = await urlModel.findOne({
             shortUrl: req.params.id
         });
-        if(!shortUrl) {
-            res.status(404).send({message: "Full Url not found!"})
+
+        if (!shortUrl) {
+            res.status(404).send({ message: "Full URL not found!" });
         } else {
             shortUrl.clicks++;
-            shortUrl.save();
-            res.redirect(`${shortUrl.fullUrl}`)
-            res.status(200).send(shortUrl)
+            await shortUrl.save();  // Ensure save is awaited
+
+            // Redirecting to the full URL and ending the response
+            res.redirect(shortUrl.fullUrl);
         }
     } catch (error) {
-        res.status(500).send({message: "Something went wrong!"})
+        res.status(500).send({ message: "Something went wrong!" });
     }
-}
+};
+
 
 export const deleteUrl = async (req: express.Request, res: express.Response) => {
     try {
