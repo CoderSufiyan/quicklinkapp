@@ -14,10 +14,13 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: [
+            "http://localhost:3000", // Local development
+            "https://quicklinkapp.onrender.com", // Deployed frontend
+        ],
         credentials: true,
     })
-)
+);
 
 app.use("/api/", shortUrl);
 
