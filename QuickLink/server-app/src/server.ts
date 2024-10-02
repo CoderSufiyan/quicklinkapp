@@ -16,7 +16,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:3000", // Local development
-            "https://quicklinkapp.onrender.com", // Deployed frontend
+            "https://quicklinkapp-1.onrender.com", // Deployed frontend
         ],
         credentials: true,
     })
